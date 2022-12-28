@@ -13,7 +13,10 @@ router.patch('/expenses/:id', async (req, res) => {
     }
 
     try{
-        const expense = await Expense.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const expense = await Expense.findById(req.params.id)
+
+        updates.forEach((update) => expense[update] = req.body[update])
+        await expense.save()
 
         if(!expense) {
             return res.status(400).send()
